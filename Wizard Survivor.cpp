@@ -4,7 +4,7 @@
 //classes file
 #include "classes/Map/Map.cpp";
 #include "classes/Player/Player.cpp";
-
+#include "classes/Enemy/Skeleton_Archer/Archer.cpp";
 void startMusic(sf::Music& music)
 {
 	if (music.openFromFile("sounds/main2.wav"))
@@ -20,6 +20,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode({ 1200,600 }), "Wizard Survivor");
 	Map map;
 	Player player;
+	Archer archer;
 	sf::Music mainMusic;
 
 
@@ -35,8 +36,14 @@ int main()
 		window.setFramerateLimit(60);
 		window.clear(sf::Color::Black);
 		window.draw(map.getSprite());
+
+		//Enemy
+		archer.animate();
+		window.draw(archer.getSprite());
+		//Player
 		player.animate();
 		window.draw(player.getSprite());
+		//------------
 		window.display();
 	}
 

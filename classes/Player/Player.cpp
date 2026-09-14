@@ -3,7 +3,7 @@ class Player
 private:
 	sf::Texture texture; //textures for a sprite
 	sf::Sprite sprite{ texture }; //sprite
-	std::string file_path = "classes/Player/textures/Idle.png"; // file path to load a texture
+	std::string file_path = "classes/Player/textures/Sprite_Sheet2.png"; // file path to load a texture
 	sf::Vector2i spriteSize{ 128,128 }; // sprite lenght,width
 	sf::Vector2f position{ 600.f, 456.f }; // starting positions of a sprite
 	sf::Vector2f origin{ 55,64.f }; // the origin of a sprite (center point)
@@ -17,12 +17,13 @@ private:
 	bool StartAttack1 = false;
 	bool StartAttack2 = false;
 	bool StartAttack3 = false;
+	bool StartAttack4 = false;
 	bool StartJump = false;
 
 public:
 	Player()
 	{
-		if (texture.loadFromFile("classes/Player/textures/Sprite_Sheet2.png"));
+		if (texture.loadFromFile(file_path));
 			sprite.setTexture(texture);
 
 		sprite.setTextureRect(sf::IntRect({ 0,0 }, { spriteSize.x, spriteSize.y }));
@@ -34,9 +35,10 @@ public:
 	{
 
 		if (StartAttack1 == true) attack1();
-		if (StartAttack2 == true) attack2();
-		if (StartAttack3 == true) attack3();
-		if (StartJump == true) jump();
+		else if (StartAttack2 == true) attack2();
+		else if (StartAttack3 == true) attack3();
+		else if (StartAttack4 == true) attack4();
+		else if (StartJump == true) jump();
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) && StartAttack1 == false)
 		{
 			StartAttack1 = true; 
@@ -50,6 +52,11 @@ public:
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R) && StartAttack3 == false)
 		{
 			StartAttack3 = true;
+			xIndex = 0;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && StartAttack4 == false)
+		{
+			StartAttack4 = true;
 			xIndex = 0;
 		}
 		//------
@@ -169,7 +176,7 @@ public:
 				xIndex = 0;
 
 
-			sf::Vector2f movment = sprite.getPosition() + sf::Vector2f({ 20.f,0 }) * facing;
+			sf::Vector2f movment = sprite.getPosition() + sf::Vector2f({ 25.f,0 }) * facing;
 			sprite.setPosition(movment);
 			if (xIndex >= spriteSize.x * frameNumber)
 			{
@@ -232,6 +239,25 @@ public:
 			if (xIndex > spriteSize.x * frameNumber)
 			{
 				xIndex = 0; StartAttack3 = false;
+			}
+		}
+	}
+	void attack4()
+	{
+		yIndex = 7 * spriteSize.y;
+		frameNumber = 12;
+
+		float deltaTime = clock.restart().asMilliseconds();
+		elapsedMiliSeconds += deltaTime;
+
+		if (elapsedMiliSeconds >= milisec)
+		{
+			elapsedMiliSeconds = 0;
+			sprite.setTextureRect(sf::IntRect({ xIndex, yIndex }, { spriteSize.x, spriteSize.y }));
+			xIndex += spriteSize.x;
+			if (xIndex > spriteSize.x * frameNumber)
+			{
+				xIndex = 0; StartAttack4 = false;
 			}
 		}
 	}
